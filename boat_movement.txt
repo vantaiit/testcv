@@ -1,0 +1,54 @@
+def can_travel_to(game_matrix, from_row, from_column, to_row, to_column):
+    # Kiểm tra nếu các tọa độ nằm ngoài lưới
+    rows = len(game_matrix)
+    cols = len(game_matrix[0])
+    
+    if not (0 <= from_row < rows and 0 <= from_column < cols):
+        return False
+    if not (0 <= to_row < rows and 0 <= to_column < cols):
+        return False
+
+    # Kiểm tra xem cả vị trí bắt đầu và vị trí đích đều là nước (True)
+    if not game_matrix[from_row][from_column] or not game_matrix[to_row][to_column]:
+        return False
+
+    # Nếu di chuyển trên cùng một hàng (theo chiều ngang)
+    if from_row == to_row:
+        # Duyệt các cột từ vị trí bắt đầu tới vị trí đích
+        step = 1 if from_column < to_column else -1
+        for col in range(from_column, to_column + step, step):
+            if not game_matrix[from_row][col]:
+                return False
+        return True
+
+    # Nếu di chuyển trên cùng một cột (theo chiều dọc)
+    elif from_column == to_column:
+        # Duyệt các hàng từ vị trí bắt đầu tới vị trí đích
+        step = 1 if from_row < to_row else -1
+        for row in range(from_row, to_row + step, step):
+            if not game_matrix[row][from_column]:
+                return False
+        return True
+
+    # Nếu không di chuyển theo đường thẳng (chỉ chấp nhận ngang hoặc dọc)
+    return False
+
+
+if __name__ == "__main__":
+    gameMatrix = [
+        [False, True,  True,  False, False, False],
+        [True,  True,  True,  False, False, False],
+        [True,  True,  True,  True,  True,  True],
+        [False, True,  True,  False, True,  True],
+        [False, True,  True,  True,  False, True],
+        [False, False, False, False, False, False],
+    ]
+
+    # Trường hợp đúng: từ (2, 3) đến (2, 2) di chuyển hợp lệ
+    print(can_travel_to(gameMatrix, 2, 3, 2, 2))  # True, hợp lệ
+
+    # Trường hợp đúng: từ (3, 2) đến (3, 4) không hợp lệ vì có đất
+    print(can_travel_to(gameMatrix, 3, 2, 3, 4))  # False, có đất chắn
+
+    # Trường hợp đúng: ngoài phạm vi lưới
+    print(can_travel_to(gameMatrix, 3, 2, 6, 2))  # False, ngoài phạm vi lưới
